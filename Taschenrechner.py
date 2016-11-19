@@ -6,11 +6,12 @@ windows_size = (235, 390)
 other_os_size = (245, 400)
 
 if platform.system() == "Linux":
-    if platform.linux_distribution()[0] == "Ubuntu":
-        window_size = ubuntu_size
-    elif platform.linux_distribution()[0] == "debian":
-        window_size = windows_size
-    else:
+    try:
+        if platform.linux_distribution()[0] == "Ubuntu":
+            window_size = ubuntu_size
+        elif platform.linux_distribution()[0] == "debian":
+            window_size = windows_size
+    except AttributeError:
         window_size = other_os_size
 elif platform.system() == "Windows":
     window_size = windows_size
