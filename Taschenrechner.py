@@ -6,6 +6,7 @@ windows_size = (235, 390)
 other_os_size = (245, 400)
 
 if platform.system() == "Linux":
+    global window_size
     try:
         if platform.linux_distribution()[0] == "Ubuntu":
             window_size = ubuntu_size
