@@ -18,4 +18,5 @@ bash install.sh
 ```
 ***
 - **Windows + macOS**
+
 in Arbeit (zu erwarten in ca. einer Woche)
