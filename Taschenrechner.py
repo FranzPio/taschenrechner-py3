@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import wx
 import platform
+import fractions
 
 ubuntu_size = (230, 330)
 windows_size = (235, 390)
@@ -90,6 +91,10 @@ class Application(wx.Frame):
         button8 = wx.Button(panel, label="8", pos=(55, 175), size=(50, 50))
         button9 = wx.Button(panel, label="9", pos=(105, 175), size=(50, 50))
         button0 = wx.Button(panel, label="0", pos=(55, 225), size=(50, 50))
+        buttonopenbracket = wx.Button(panel, label="(", pos=(5, 275), size=(25, 50))
+        buttonclosebracket = wx.Button(panel, label=")", pos=(30, 275), size=(25, 50))
+        buttonfraction = wx.Button(panel, label="x/y", pos=(55, 275), size=(50, 50))
+        buttondecimalmark = wx.Button(panel, label=".", pos=(105, 275), size=(50, 50))
         buttonadd = wx.Button(panel, label="+", pos=(175, 75), size=(50, 50))
         buttonsubtract = wx.Button(panel, label="-", pos=(175, 125), size=(50, 50))
         buttonmultiply = wx.Button(panel, label="*", pos=(175, 175), size=(50, 50))
@@ -97,10 +102,12 @@ class Application(wx.Frame):
         buttonequals = wx.Button(panel, label="=", pos=(175, 275), size=(50, 50))
 
         buttonlist = [button1, button2, button3, button4, button5, button6, button7, button8, button9, button0,
-                      buttonadd, buttonsubtract, buttonmultiply, buttondivide, buttonequals]
+                      buttonopenbracket, buttonclosebracket, buttonfraction, buttondecimalmark, buttonadd,
+                      buttonsubtract, buttonmultiply, buttondivide, buttonequals]
 
         evt_handlers = [self.set1, self.set2, self.set3, self.set4, self.set5, self.set6, self.set7, self.set8,
-                        self.set9, self.set0, self.setadd, self.setsubtract, self.setmultiply, self.setdivide,
+                        self.set9, self.set0, self.setopenbracket, self.setclosebracket, self.setfraction,
+                        self.setdecimalmark, self.setadd, self.setsubtract, self.setmultiply, self.setdivide,
                         self.setequals]
 
         for index, button in enumerate(buttonlist):
@@ -171,6 +178,23 @@ class Application(wx.Frame):
         self.to_display += str(self.number)
         self.display.SetLabel(self.to_display)
 
+    def setopenbracket(self, evt):
+        self.to_display += "("
+        self.display.SetLabel(self.to_display)
+
+    def setclosebracket(self, evt):
+        self.to_display += ")"
+        self.display.SetLabel(self.to_display)
+
+    def setfraction(self, evt):
+        fraction = str(fractions.Fraction(self.result).limit_denominator())
+        if self.result != 0:
+            self.display.SetLabel(fraction)
+
+    def setdecimalmark(self, evt):
+        self.to_display += "."
+        self.display.SetLabel(self.to_display)
+
     def setadd(self, evt):
         self.display.SetLabel("+")
         try:
@@ -212,6 +236,7 @@ class Application(wx.Frame):
             self.to_display = ""
 
     def setequals(self, evt):
+        self.result = 0
         try:
             self.numbers += self.to_display
         except ValueError:
@@ -221,7 +246,7 @@ class Application(wx.Frame):
         except SyntaxError:
             pass
         self.display.SetLabel("= " + str(self.result))
-        self.result = 0
+        # self.result = 0
         self.to_display = ""
         self.numbers = ""
 
