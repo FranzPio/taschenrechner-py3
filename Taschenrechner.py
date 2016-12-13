@@ -28,7 +28,7 @@ class Application(wx.Frame):
         super().__init__(*args, **kwargs)  # parent, title=title, size=(225, 500), style=style)
         # self.SetPosition((400, 150))
         self.muldiv_already_pressed = False
-        self.to_display = ""
+        self.displaying = ""
         self.result = 0
         self.numbers = ""
         self.Centre()
@@ -76,7 +76,7 @@ class Application(wx.Frame):
         panel = wx.Panel(self)
 
         font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
-        font.SetPointSize(30)
+        font.SetPointSize(25)
 
         self.display = wx.StaticText(panel, label="0", pos=(5, 5))
         self.display.SetFont(font)
@@ -121,70 +121,85 @@ class Application(wx.Frame):
 
     def set1(self, evt):
         self.muldiv_already_pressed = False
-        self.number = 1
-        self.to_display += str(self.number)
-        self.display.SetLabel(self.to_display)
+        value = "1"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def set2(self, evt):
         self.muldiv_already_pressed = False
-        self.number = 2
-        self.to_display += str(self.number)
-        self.display.SetLabel(self.to_display)
+        value = "2"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def set3(self, evt):
         self.muldiv_already_pressed = False
-        self.number = 3
-        self.to_display += str(self.number)
-        self.display.SetLabel(self.to_display)
+        value = "3"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def set4(self, evt):
         self.muldiv_already_pressed = False
-        self.number = 4
-        self.to_display += str(self.number)
-        self.display.SetLabel(self.to_display)
+        value = "4"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def set5(self, evt):
         self.muldiv_already_pressed = False
-        self.number = 5
-        self.to_display += str(self.number)
-        self.display.SetLabel(self.to_display)
+        value = "5"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def set6(self, evt):
         self.muldiv_already_pressed = False
-        self.number = 6
-        self.to_display += str(self.number)
-        self.display.SetLabel(self.to_display)
+        value = "6"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def set7(self, evt):
         self.muldiv_already_pressed = False
-        self.number = 7
-        self.to_display += str(self.number)
-        self.display.SetLabel(self.to_display)
+        value = "7"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def set8(self, evt):
         self.muldiv_already_pressed = False
-        self.number = 8
-        self.to_display += str(self.number)
-        self.display.SetLabel(self.to_display)
+        value = "8"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def set9(self, evt):
         self.muldiv_already_pressed = False
-        self.number = 9
-        self.to_display += str(self.number)
-        self.display.SetLabel(self.to_display)
+        value = "9"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def set0(self, evt):
-        self.number = 0
-        self.to_display += str(self.number)
-        self.display.SetLabel(self.to_display)
+        self.muldiv_already_pressed = False
+        value = "0"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def setopenbracket(self, evt):
-        self.to_display += "("
-        self.display.SetLabel(self.to_display)
+        value = "("
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def setclosebracket(self, evt):
-        self.to_display += ")"
-        self.display.SetLabel(self.to_display)
+        value = ")"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def setfraction(self, evt):
         fraction = str(fractions.Fraction(self.result).limit_denominator())
@@ -192,62 +207,53 @@ class Application(wx.Frame):
             self.display.SetLabel(fraction)
 
     def setdecimalmark(self, evt):
-        self.to_display += "."
-        self.display.SetLabel(self.to_display)
+        value = "."
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def setadd(self, evt):
-        self.display.SetLabel("+")
-        try:
-            self.numbers += self.to_display + "+"
-        except ValueError:
-            pass
-        self.to_display = ""
+        value = "+"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def setsubtract(self, evt):
-        self.display.SetLabel("-")
-        try:
-            self.numbers += self.to_display + "-"
-        except ValueError:
-            pass
-        self.to_display = ""
+        value = "-"
+        self.numbers += value
+        self.displaying += value
+        self.display.SetLabel(self.displaying)
 
     def setmultiply(self, evt):
         if self.muldiv_already_pressed:
             pass
         else:
             self.muldiv_already_pressed = True
-            self.display.SetLabel("*")
-            try:
-                self.numbers += self.to_display + "*"
-            except ValueError:
-                pass
-            self.to_display = ""
+            value = "*"
+            self.numbers += value
+            self.displaying += value
+            self.display.SetLabel(self.displaying)
 
     def setdivide(self, evt):
         if self.muldiv_already_pressed:
             pass
         else:
             self.muldiv_already_pressed = True
-            self.display.SetLabel("/")
-            try:
-                self.numbers += self.to_display + "/"
-            except ValueError:
-                pass
-            self.to_display = ""
+            value = "/"
+            self.numbers += value
+            self.displaying += value
+            self.display.SetLabel(self.displaying)
 
     def setequals(self, evt):
         self.result = 0
         try:
-            self.numbers += self.to_display
-        except ValueError:
-            pass
-        try:
             self.result = eval(self.numbers)
+        except ZeroDivisionError:
+            self.result = "Math. Fehler"
         except SyntaxError:
-            pass
+            self.result = "Syntaxfehler"
         self.display.SetLabel("= " + str(self.result))
-        # self.result = 0
-        self.to_display = ""
+        self.displaying = ""
         self.numbers = ""
 
 
