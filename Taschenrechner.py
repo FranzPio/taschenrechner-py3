@@ -3,7 +3,7 @@ import wx
 import platform
 import fractions
 
-ubuntu_size = (230, 330)
+ubuntu_size = (230, 360)
 windows_size = (235, 390)
 other_os_size = (245, 400)
 
