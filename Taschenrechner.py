@@ -2,38 +2,22 @@
 import wx
 import platform
 import fractions
-
-ubuntu_size = (230, 360)
-windows_size = (235, 390)
-other_os_size = (245, 400)
-
-if platform.system() == "Linux":
-    global window_size
-    try:
-        if platform.linux_distribution()[0] == "Ubuntu":
-            window_size = ubuntu_size
-        elif platform.linux_distribution()[0] == "debian":
-            window_size = windows_size
-    except AttributeError:
-        window_size = other_os_size
-elif platform.system() == "Windows":
-    window_size = windows_size
-else:
-    window_size = other_os_size
+from collections import OrderedDict
 
 
 class Application(wx.Frame):
 
-    def __init__(self, *args, **kwargs):  # parent, title, style=wx.DEFAULT_FRAME_STYLE):
-        super().__init__(*args, **kwargs)  # parent, title=title, size=(225, 500), style=style)
-        # self.SetPosition((400, 150))
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.muldiv_already_pressed = False
+        self.shift_already_pressed = False
         self.displaying = ""
         self.result = 0
         self.numbers = ""
-        self.Centre()
         self.menubar()
         self.UI()
+        self.SetMinSize((303, 400))
+        self.Centre()
         self.Show()
 
     def menubar(self):
@@ -42,24 +26,11 @@ class Application(wx.Frame):
         actions_menu = wx.Menu()
         menubar.Append(actions_menu, "&Aktionen")
 
-        view_menu = wx.Menu()
-        menubar.Append(view_menu, "&Ansicht")
-
-        self.showstatusbarbutton = wx.MenuItem(view_menu, wx.ID_ANY, "&Statusleiste anzeigen\tCtrl+A",
-                                               "Die Statusleiste wird angezeigt/versteckt.", wx.ITEM_CHECK)
-        view_menu.Append(self.showstatusbarbutton)
-        view_menu.Check(self.showstatusbarbutton.GetId(), False)
-        self.showstatusbarbutton.Enable(False)
-
-        actions_menu.AppendSeparator()
-
         minimizebutton = wx.MenuItem(actions_menu, wx.ID_ICONIZE_FRAME, "&Minimieren\tCtrl+M",
                                      "Das Fenster wird minimiert.")
-        # minimizebutton.SetBitmap(wx.Bitmap(r"resources\wxPythontest\minimizeimage.png"))
         actions_menu.Append(minimizebutton)
 
         quitbutton = wx.MenuItem(actions_menu, wx.ID_EXIT, "&Schließen\tCtrl+S", "Das Fenster wird geschlossen.")
-        # quitbutton.SetBitmap(wx.Bitmap(r"\resources\wxPythontest\quitimage.png"))
         actions_menu.Append(quitbutton)
 
         self.Bind(wx.EVT_MENU, self.CloseApp, id=wx.ID_EXIT)
@@ -67,51 +38,89 @@ class Application(wx.Frame):
 
         self.SetMenuBar(menubar)
 
-        self.statusbar = self.CreateStatusBar()
-        self.statusbar.Hide()
-        # self.statusbar.SetStatusText("")
-
     # noinspection PyArgumentList
     def UI(self):
         panel = wx.Panel(self)
+        self.buttondict = OrderedDict()
 
-        font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
-        font.SetPointSize(25)
+        font = wx.Font(pointSize=25, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
+                       weight=wx.FONTWEIGHT_BOLD) \
+            if platform.system() == "Windows" \
+            else wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
+        buttonfont = wx.Font(pointSize=10, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
+                             weight=wx.FONTWEIGHT_NORMAL)
+
+        vbox = wx.BoxSizer(wx.VERTICAL)
+
+        hbox1 = wx.BoxSizer(wx.HORIZONTAL)
+        hbox2 = wx.BoxSizer(wx.HORIZONTAL)
+        hbox3 = wx.BoxSizer(wx.HORIZONTAL)
+        hbox4 = wx.BoxSizer(wx.HORIZONTAL)
+        hbox5 = wx.BoxSizer(wx.HORIZONTAL)
+        hbox6 = wx.BoxSizer(wx.HORIZONTAL)
 
         self.display = wx.StaticText(panel, label="0", pos=(5, 5))
         self.display.SetFont(font)
+        hbox1.Add(self.display, 1, wx.EXPAND | wx.ALL, 5)
+        vbox.Add(hbox1, 1, wx.EXPAND | wx.ALL, 0)
+        vbox.Add((-1, 10))
 
-        button1 = wx.Button(panel, label="1", pos=(5, 75), size=(50, 50))
-        button2 = wx.Button(panel, label="2", pos=(55, 75), size=(50, 50))
-        button3 = wx.Button(panel, label="3", pos=(105, 75), size=(50, 50))
-        button4 = wx.Button(panel, label="4", pos=(5, 125), size=(50, 50))
-        button5 = wx.Button(panel, label="5", pos=(55, 125), size=(50, 50))
-        button6 = wx.Button(panel, label="6", pos=(105, 125), size=(50, 50))
-        button7 = wx.Button(panel, label="7", pos=(5, 175), size=(50, 50))
-        button8 = wx.Button(panel, label="8", pos=(55, 175), size=(50, 50))
-        button9 = wx.Button(panel, label="9", pos=(105, 175), size=(50, 50))
-        button0 = wx.Button(panel, label="0", pos=(55, 225), size=(50, 50))
-        buttonopenbracket = wx.Button(panel, label="(", pos=(5, 275), size=(25, 50))
-        buttonclosebracket = wx.Button(panel, label=")", pos=(30, 275), size=(25, 50))
-        buttonfraction = wx.Button(panel, label="x/y", pos=(55, 275), size=(50, 50))
-        buttondecimalmark = wx.Button(panel, label=".", pos=(105, 275), size=(50, 50))
-        buttonadd = wx.Button(panel, label="+", pos=(175, 75), size=(50, 50))
-        buttonsubtract = wx.Button(panel, label="-", pos=(175, 125), size=(50, 50))
-        buttonmultiply = wx.Button(panel, label="*", pos=(175, 175), size=(50, 50))
-        buttondivide = wx.Button(panel, label="/", pos=(175, 225), size=(50, 50))
-        buttonequals = wx.Button(panel, label="=", pos=(175, 275), size=(50, 50))
+        buttonlabels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "(", ")", "x/y", ",", "+", "-", "*", "/", "="]
+        for label in buttonlabels:
+            if label != ")" and label != "(":
+                self.buttondict["button" + label] = wx.Button(panel, label=label, size=(50, 50))
+            else:
+                self.buttondict["button" + label] = wx.Button(panel, label=label, size=(20, 50))
 
-        buttonlist = [button1, button2, button3, button4, button5, button6, button7, button8, button9, button0,
-                      buttonopenbracket, buttonclosebracket, buttonfraction, buttondecimalmark, buttonadd,
-                      buttonsubtract, buttonmultiply, buttondivide, buttonequals]
+        hbox2.Add(self.buttondict["button1"], 1, wx.EXPAND | wx.RIGHT, 5)
+        hbox2.Add(self.buttondict["button2"], 1, wx.EXPAND | wx.RIGHT, 5)
+        hbox2.Add(self.buttondict["button3"], 1, wx.EXPAND | wx.RIGHT, 5)
+        hbox2.Add(self.buttondict["button+"], 2, wx.EXPAND)
+        vbox.Add(hbox2, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 5)
+        vbox.Add((-1, 3))
 
-        evt_handlers = [self.set1, self.set2, self.set3, self.set4, self.set5, self.set6, self.set7, self.set8,
-                        self.set9, self.set0, self.setopenbracket, self.setclosebracket, self.setfraction,
+        hbox3.Add(self.buttondict["button4"], 1, wx.EXPAND | wx.RIGHT, 5)
+        hbox3.Add(self.buttondict["button5"], 1, wx.EXPAND | wx.RIGHT, 5)
+        hbox3.Add(self.buttondict["button6"], 1, wx.EXPAND | wx.RIGHT, 5)
+        hbox3.Add(self.buttondict["button-"], 2, wx.EXPAND)
+        vbox.Add(hbox3, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 5)
+        vbox.Add((-1, 3))
+
+        hbox4.Add(self.buttondict["button7"], 1, wx.EXPAND | wx.RIGHT, 5)
+        hbox4.Add(self.buttondict["button8"], 1, wx.EXPAND | wx.RIGHT, 5)
+        hbox4.Add(self.buttondict["button9"], 1, wx.EXPAND | wx.RIGHT, 5)
+        hbox4.Add(self.buttondict["button*"], 2, wx.EXPAND)
+        vbox.Add(hbox4, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 5)
+        vbox.Add((-1, 3))
+
+        hbox5.Add(self.buttondict["button0"], 1, wx.EXPAND | wx.RIGHT, 5)
+        hbox5.AddStretchSpacer(2)
+        hbox5.Add(self.buttondict["button/"], 2, wx.EXPAND)
+        vbox.Add(hbox5, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 5)
+        vbox.Add((-1, 3))
+
+        hbox6.Add(self.buttondict["button("], 1, wx.EXPAND | wx.RIGHT, 2)
+        hbox6.Add(self.buttondict["button)"], 1, wx.EXPAND | wx.RIGHT, 5)
+        hbox6.Add(self.buttondict["buttonx/y"], 2, wx.EXPAND | wx.RIGHT, 5)
+        hbox6.Add(self.buttondict["button,"], 2, wx.EXPAND | wx.RIGHT, 5)
+        hbox6.Add(self.buttondict["button="], 4, wx.EXPAND)
+        vbox.Add(hbox6, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 5)
+        vbox.Add((-1, 5))
+
+        panel.SetSizer(vbox)
+
+        buttonlist = self.buttondict.values()
+        evt_handlers = [self.set0, self.set1, self.set2, self.set3, self.set4, self.set5, self.set6, self.set7,
+                        self.set8, self.set9, self.setopenbracket, self.setclosebracket, self.setfraction,
                         self.setdecimalmark, self.setadd, self.setsubtract, self.setmultiply, self.setdivide,
                         self.setequals]
 
-        for index, button in enumerate(buttonlist):
+        index = 0
+        for button in buttonlist:
             button.Bind(wx.EVT_BUTTON, evt_handlers[index])
+            button.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+            button.SetFont(buttonfont)
+            index += 1
 
     def CloseApp(self, evt):
         self.Close()
@@ -119,12 +128,37 @@ class Application(wx.Frame):
     def MinimizeApp(self, evt):
         self.Iconize()
 
+    def OnKeyDown(self, evt):
+        key = evt.GetKeyCode()
+        numpaddict = {"324": "0", "325": "1", "326": "2", "327": "3", "328": "4", "329": "5", "330": "6", "331": "7",
+                      "332": "8", "333": "9"}
+        operatordict = {"43": "add", "45": "subtract"}
+        shiftoperatordict = {"43": "multiply", "55": "divide", "56": "openbracket", "57": "closebracket"}
+        if not self.shift_already_pressed:
+            if str(key) == "306":
+                self.shift_already_pressed = True
+            else:
+                try:
+                    print(str(key))
+                    number = int(chr(key))
+                    eval("self.set" + str(number) + "(wx.EVT_BUTTON)")
+                except ValueError:
+                    if str(key) in numpaddict.keys():
+                        eval("self.set" + numpaddict[str(key)] + "(wx.EVT_BUTTON)")
+                    if str(key) in operatordict.keys():
+                        eval("self.set" + operatordict[str(key)] + "(wx.EVT_BUTTON)")
+        else:
+            if str(key) in shiftoperatordict.keys():
+                eval("self.set" + shiftoperatordict[str(key)] + "(wx.EVT_BUTTON)")
+            self.shift_already_pressed = False
+
     def set1(self, evt):
         self.muldiv_already_pressed = False
         value = "1"
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
+        self.buttondict["button="].SetFocus()
 
     def set2(self, evt):
         self.muldiv_already_pressed = False
@@ -132,6 +166,7 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
+        self.buttondict["button="].SetFocus()
 
     def set3(self, evt):
         self.muldiv_already_pressed = False
@@ -139,6 +174,7 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
+        self.buttondict["button="].SetFocus()
 
     def set4(self, evt):
         self.muldiv_already_pressed = False
@@ -146,6 +182,7 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
+        self.buttondict["button="].SetFocus()
 
     def set5(self, evt):
         self.muldiv_already_pressed = False
@@ -153,6 +190,7 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
+        self.buttondict["button="].SetFocus()
 
     def set6(self, evt):
         self.muldiv_already_pressed = False
@@ -160,6 +198,7 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
+        self.buttondict["button="].SetFocus()
 
     def set7(self, evt):
         self.muldiv_already_pressed = False
@@ -167,6 +206,7 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
+        self.buttondict["button="].SetFocus()
 
     def set8(self, evt):
         self.muldiv_already_pressed = False
@@ -174,6 +214,7 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
+        self.buttondict["button="].SetFocus()
 
     def set9(self, evt):
         self.muldiv_already_pressed = False
@@ -181,6 +222,7 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
+        self.buttondict["button="].SetFocus()
 
     def set0(self, evt):
         self.muldiv_already_pressed = False
@@ -188,23 +230,29 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
+        self.buttondict["button="].SetFocus()
 
     def setopenbracket(self, evt):
         value = "("
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
+        self.buttondict["button="].SetFocus()
 
     def setclosebracket(self, evt):
         value = ")"
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
+        self.buttondict["button="].SetFocus()
 
     def setfraction(self, evt):
-        fraction = str(fractions.Fraction(self.result).limit_denominator())
-        if self.result != 0:
-            self.display.SetLabel(fraction)
+        try:
+            fraction = str(fractions.Fraction(self.result).limit_denominator())
+            if self.result != 0:
+                self.display.SetLabel(fraction)
+        except ValueError:
+            pass
 
     def setdecimalmark(self, evt):
         value = "."
@@ -258,6 +306,6 @@ class Application(wx.Frame):
 
 
 app = wx.App()
-Application(None, title="Rechner", size=window_size,
-            style=wx.SYSTEM_MENU | wx.CAPTION | wx.MINIMIZE_BOX | wx.CLOSE_BOX)
+Application(None, title="Rechner", size=(325, 400),
+            style=wx.SYSTEM_MENU | wx.CAPTION | wx.MINIMIZE_BOX | wx.CLOSE_BOX | wx.RESIZE_BORDER)
 app.MainLoop()
