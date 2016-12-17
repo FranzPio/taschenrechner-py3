@@ -11,6 +11,7 @@ class Application(wx.Frame):
         super().__init__(*args, **kwargs)
         self.muldiv_already_pressed = False
         self.shift_already_pressed = False
+        self.buttondict = OrderedDict()
         self.displaying = ""
         self.result = 0
         self.numbers = ""
@@ -41,7 +42,6 @@ class Application(wx.Frame):
     # noinspection PyArgumentList
     def UI(self):
         panel = wx.Panel(self)
-        self.buttondict = OrderedDict()
 
         if platform.system() == "Windows":
             font = wx.Font(pointSize=25, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
