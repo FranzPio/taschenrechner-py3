@@ -43,10 +43,12 @@ class Application(wx.Frame):
         panel = wx.Panel(self)
         self.buttondict = OrderedDict()
 
-        font = wx.Font(pointSize=25, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
-                       weight=wx.FONTWEIGHT_BOLD) \
-            if platform.system() == "Windows" \
-            else wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
+        if platform.system() == "Windows":
+            font = wx.Font(pointSize=25, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
+                           weight=wx.FONTWEIGHT_BOLD)
+        else:
+            font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
+            font.SetPointSize(30)
         buttonfont = wx.Font(pointSize=10, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
                              weight=wx.FONTWEIGHT_NORMAL)
 
@@ -132,14 +134,14 @@ class Application(wx.Frame):
         key = evt.GetKeyCode()
         numpaddict = {"324": "0", "325": "1", "326": "2", "327": "3", "328": "4", "329": "5", "330": "6", "331": "7",
                       "332": "8", "333": "9"}
-        operatordict = {"43": "add", "45": "subtract"}
+        operatordict = {"43": "add", "45": "subtract", "10": "equals", "13": "equals", "44": "decimalmark",
+                        "46": "decimalmark"}
         shiftoperatordict = {"43": "multiply", "55": "divide", "56": "openbracket", "57": "closebracket"}
         if not self.shift_already_pressed:
             if str(key) == "306":
                 self.shift_already_pressed = True
             else:
                 try:
-                    print(str(key))
                     number = int(chr(key))
                     eval("self.set" + str(number) + "(wx.EVT_BUTTON)")
                 except ValueError:
@@ -158,7 +160,6 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
-        self.buttondict["button="].SetFocus()
 
     def set2(self, evt):
         self.muldiv_already_pressed = False
@@ -166,7 +167,6 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
-        self.buttondict["button="].SetFocus()
 
     def set3(self, evt):
         self.muldiv_already_pressed = False
@@ -174,7 +174,6 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
-        self.buttondict["button="].SetFocus()
 
     def set4(self, evt):
         self.muldiv_already_pressed = False
@@ -182,7 +181,6 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
-        self.buttondict["button="].SetFocus()
 
     def set5(self, evt):
         self.muldiv_already_pressed = False
@@ -190,7 +188,6 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
-        self.buttondict["button="].SetFocus()
 
     def set6(self, evt):
         self.muldiv_already_pressed = False
@@ -198,7 +195,6 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
-        self.buttondict["button="].SetFocus()
 
     def set7(self, evt):
         self.muldiv_already_pressed = False
@@ -206,7 +202,6 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
-        self.buttondict["button="].SetFocus()
 
     def set8(self, evt):
         self.muldiv_already_pressed = False
@@ -214,7 +209,6 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
-        self.buttondict["button="].SetFocus()
 
     def set9(self, evt):
         self.muldiv_already_pressed = False
@@ -222,7 +216,6 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
-        self.buttondict["button="].SetFocus()
 
     def set0(self, evt):
         self.muldiv_already_pressed = False
@@ -230,21 +223,18 @@ class Application(wx.Frame):
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
-        self.buttondict["button="].SetFocus()
 
     def setopenbracket(self, evt):
         value = "("
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
-        self.buttondict["button="].SetFocus()
 
     def setclosebracket(self, evt):
         value = ")"
         self.numbers += value
         self.displaying += value
         self.display.SetLabel(self.displaying)
-        self.buttondict["button="].SetFocus()
 
     def setfraction(self, evt):
         try:
@@ -298,7 +288,7 @@ class Application(wx.Frame):
             self.result = eval(self.numbers)
         except ZeroDivisionError:
             self.result = "Math. Fehler"
-        except SyntaxError:
+        except (SyntaxError, TypeError):
             self.result = "Syntaxfehler"
         self.display.SetLabel("= " + str(self.result))
         self.displaying = ""
