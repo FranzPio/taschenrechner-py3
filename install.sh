@@ -19,7 +19,7 @@ read -p "> [ENTER] drücken, um fortzufahren: " -n 1  -s
 echo ""
 sudo apt-get install python3-pip
 sudo pip3 install -U setuptools
-sudo pip3 install -U --pre -f https://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix
+sudo pip3 install --pre -f https://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix
 echo ""
 echo "> ==================================="
 echo "> Installiere 'taschenrechner-py3'..."
