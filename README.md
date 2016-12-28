@@ -18,7 +18,7 @@ Ein Taschenrechner in Python 3 mit wxPython.
 
 1.
 
-Python 3.x installieren (https://www.python.org/downloads/mac-osx/)
+Python 3.x installieren (https://www.python.org/downloads/)
 
 2.
 ```shell
