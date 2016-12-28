@@ -21,7 +21,8 @@ class Application(wx.Frame):
 
         self.SetMinSize((303, 400))
         self.Centre()
-        self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+        if ostype != "Linux":
+            self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         self.SetFocus()
         self.Show()
 
@@ -125,6 +126,8 @@ class Application(wx.Frame):
         index = 0
         for button in buttonlist:
             button.Bind(wx.EVT_BUTTON, evt_handlers[index])
+            if ostype == "Linux":
+                button.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
             button.SetFont(buttonfont)
             index += 1
 
@@ -136,11 +139,10 @@ class Application(wx.Frame):
 
     def OnKeyDown(self, evt):
         key = evt.GetKeyCode()
-        print(key)
         numpaddict = {"324": "0", "325": "1", "326": "2", "327": "3", "328": "4", "329": "5", "330": "6", "331": "7",
-                      "332": "8", "333": "9"}
-        operatordict = {"43": "add", "45": "subtract", "10": "equals", "13": "equals", "370": "equals",
-                        "44": "decimalmark", "46": "decimalmark", "391": "decimalmark"}
+                      "332": "8", "333": "9", "370": "equals", "389": "decimalmark", "391": "decimalmark"}
+        operatordict = {"43": "add", "45": "subtract", "10": "equals", "13": "equals", "44": "decimalmark",
+                        "46": "decimalmark"}
         shiftoperatordict = {"43": "multiply", "55": "divide", "56": "openbracket", "57": "closebracket"}
         if not self.shift_already_pressed:
             if str(key) == "306":
@@ -318,6 +320,8 @@ class Application(wx.Frame):
         self.numbers = ""
         self.SetFocus()
 
+
+ostype = platform.system()
 
 app = wx.App()
 Application(None, title="Rechner", size=(325, 400),
