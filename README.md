@@ -32,4 +32,3 @@ unzip taschenrechner-py3-master.zip -d /tmp
 cd /tmp/taschenrechner-py3-master
 bash install.sh
 ```
-
