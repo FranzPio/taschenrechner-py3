@@ -27,8 +27,11 @@ cd $HOME/Downloads
 (falls abweichend durch entsprechenden Download-Ordner ersetzen)
 
 3.
+
+`taschenrechner-py3-master.zip` entpacken (z.B. nach `/tmp`)
+
+4.
 ```shell
-unzip taschenrechner-py3-master.zip -d /tmp
 cd /tmp/taschenrechner-py3-master
 bash install.sh
 ```
