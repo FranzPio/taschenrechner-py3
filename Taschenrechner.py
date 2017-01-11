@@ -140,10 +140,12 @@ class Application(wx.Frame):
     def OnKeyDown(self, evt):
         key = evt.GetKeyCode()
         numpaddict = {"324": "0", "325": "1", "326": "2", "327": "3", "328": "4", "329": "5", "330": "6", "331": "7",
-                      "332": "8", "333": "9", "370": "equals", "389": "decimalmark", "391": "decimalmark"}
+                      "332": "8", "333": "9", "388": "add", "390": "subtract", "387": "multiply", "392": "divide",
+                      "370": "equals", "389": "decimalmark", "391": "decimalmark"}
         operatordict = {"43": "add", "45": "subtract", "10": "equals", "13": "equals", "44": "decimalmark",
                         "46": "decimalmark"}
-        shiftoperatordict = {"43": "multiply", "55": "divide", "56": "openbracket", "57": "closebracket"}
+        shiftoperatordict = {"43": "multiply", "55": "divide", "56": "openbracket", "57": "closebracket",
+                             "48": "equals"}
         if not self.shift_already_pressed:
             if str(key) == "306":
                 self.shift_already_pressed = True
