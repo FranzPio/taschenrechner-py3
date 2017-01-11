@@ -47,6 +47,7 @@ class Application(wx.Frame):
     # noinspection PyArgumentList
     def UI(self):
         panel = wx.Panel(self)
+        # panel.Unbind(wx.EVT_SET_FOCUS)
 
         if platform.system() == "Windows":
             font = wx.Font(pointSize=25, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
@@ -316,7 +317,8 @@ class Application(wx.Frame):
         except ZeroDivisionError:
             self.result = "Math. Fehler"
         except (SyntaxError, TypeError):
-            self.result = "Syntaxfehler"
+            if self.numbers:
+                self.result = "Syntaxfehler"
         self.display.SetLabel("= " + str(self.result))
         self.displaying = ""
         self.numbers = ""
