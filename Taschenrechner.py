@@ -60,7 +60,7 @@ class Application(wx.Frame):
             font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
             font.SetPointSize(30)
 
-        buttonfont = wx.Font(pointSize=12, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
+        buttonfont = wx.Font(pointSize=11, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
                              weight=wx.FONTWEIGHT_NORMAL)
 
         vbox = wx.BoxSizer(wx.VERTICAL)
