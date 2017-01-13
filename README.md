@@ -14,7 +14,7 @@ Ein Taschenrechner in Python 3 mit wxPython.
 
 `Taschenrechner` ausführen
 ***
-- **Source (für macOS / bei Problemen unter Linux)**
+- **Source (bei Problemen unter Linux)**
 
 1.
 
