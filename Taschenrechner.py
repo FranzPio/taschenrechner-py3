@@ -46,8 +46,12 @@ class Application(wx.Frame):
 
     # noinspection PyArgumentList
     def UI(self):
-        panel = wx.Panel(self)
-        # panel.Unbind(wx.EVT_SET_FOCUS)
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
+        # seems to work on Windows (almost exactly like the default frame colour)
+        # but on Linux? maybe this will be better:
+        #
+        # self.SetBackgroundColour(wx.NullColour)
+        #
 
         if platform.system() == "Windows":
             font = wx.Font(pointSize=25, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
@@ -56,7 +60,7 @@ class Application(wx.Frame):
             font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
             font.SetPointSize(30)
 
-        buttonfont = wx.Font(pointSize=10, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
+        buttonfont = wx.Font(pointSize=12, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
                              weight=wx.FONTWEIGHT_NORMAL)
 
         vbox = wx.BoxSizer(wx.VERTICAL)
@@ -68,7 +72,7 @@ class Application(wx.Frame):
         hbox5 = wx.BoxSizer(wx.HORIZONTAL)
         hbox6 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.display = wx.StaticText(panel, label="0", pos=(5, 5))
+        self.display = wx.StaticText(self, label="0", pos=(5, 5))
         self.display.SetFont(font)
         hbox1.Add(self.display, 1, wx.EXPAND | wx.ALL, 5)
         vbox.Add(hbox1, 1, wx.EXPAND | wx.ALL, 0)
@@ -77,9 +81,9 @@ class Application(wx.Frame):
         buttonlabels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "(", ")", "x/y", ",", "+", "-", "*", "/", "="]
         for label in buttonlabels:
             if label != ")" and label != "(":
-                self.buttondict["button" + label] = wx.Button(panel, label=label, size=(50, 50))
+                self.buttondict["button" + label] = wx.Button(self, label=label, size=(50, 50))
             else:
-                self.buttondict["button" + label] = wx.Button(panel, label=label, size=(20, 50))
+                self.buttondict["button" + label] = wx.Button(self, label=label, size=(20, 50))
 
         hbox2.Add(self.buttondict["button1"], 1, wx.EXPAND | wx.RIGHT, 5)
         hbox2.Add(self.buttondict["button2"], 1, wx.EXPAND | wx.RIGHT, 5)
@@ -116,7 +120,7 @@ class Application(wx.Frame):
         vbox.Add(hbox6, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 5)
         vbox.Add((-1, 5))
 
-        panel.SetSizer(vbox)
+        self.SetSizer(vbox)
 
         buttonlist = self.buttondict.values()
         evt_handlers = [self.set0, self.set1, self.set2, self.set3, self.set4, self.set5, self.set6, self.set7,
