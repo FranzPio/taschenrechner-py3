@@ -148,7 +148,7 @@ class Application(wx.Frame):
                       "332": "8", "333": "9", "388": "add", "390": "subtract", "387": "multiply", "392": "divide",
                       "370": "equals", "389": "decimalmark", "391": "decimalmark"}
         operatordict = {"43": "add", "45": "subtract", "10": "equals", "13": "equals", "44": "decimalmark",
-                        "46": "decimalmark"}
+                        "46": "decimalmark", "8": "backspace"}
         shiftoperatordict = {"43": "multiply", "55": "divide", "56": "openbracket", "57": "closebracket",
                              "48": "equals"}
         if not self.shift_already_pressed:
@@ -161,7 +161,7 @@ class Application(wx.Frame):
                 except ValueError:
                     if str(key) in numpaddict.keys():
                         eval("self.set" + numpaddict[str(key)] + "(wx.EVT_BUTTON)")
-                    if str(key) in operatordict.keys():
+                    elif str(key) in operatordict.keys():
                         eval("self.set" + operatordict[str(key)] + "(wx.EVT_BUTTON)")
         else:
             if str(key) in shiftoperatordict.keys():
@@ -245,6 +245,12 @@ class Application(wx.Frame):
         value = "0"
         self.numbers += value
         self.displaying += value
+        self.display.SetLabel(self.displaying)
+        self.SetFocus()
+
+    def setbackspace(self, evt):
+        self.numbers = self.numbers[:-1]
+        self.displaying = self.displaying[:-1]
         self.display.SetLabel(self.displaying)
         self.SetFocus()
 
